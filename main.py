@@ -1,11 +1,7 @@
-meme_dict = {
-            "КРИНЖ": "Что-то очень странное или стыдное",
-            "ЛОЛ": "Что-то очень смешное",
-            "РОФЛ": "шутка",
-            "АГРИТЬСЯ": "злится",
-            }
-word = input("Введите непонятное слово (большими буквами!): ")
-if word in meme_dict.keys():
-    print(meme_dict[word])
-else:
-    print('слова нету')
+import random
+passwords = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+l = int(input('введите длину пороля'))
+parol = ''
+for i in range (l):
+    parol+= random.choice(passwords)
+print(parol)
