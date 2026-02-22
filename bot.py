@@ -1,7 +1,7 @@
 import telebot
 from bot_logic import gen_pass
 import random
-
+import os
 # Замени 'TOKEN' на токен твоего бота
 # Этот токен ты получаешь от BotFather, чтобы бот мог работать
 bot = telebot.TeleBot("")
@@ -26,18 +26,26 @@ def send_password(message):
 def flip(message):
     result = random.choice(['Орел', 'Решка'])
     bot.reply_to(message, f"Монетка показывает: {result}")
+
+@bot.message_handler(commands=['mem'])
+def mems(message):
+    fiels = os.listdir('images')
+    fiel = random.choice(fiels)
+    with open(f'images/{fiel}','rb') as f:
+         bot.send_photo(message.chat.id,f)
     
-@bot.message_handler(func=lambda m: True, content_types=['new_chat_participant'])
+@bot.message_handler(func=lambda m: True, content_types=['new_chat_members'])
 def on_user_joins(message):
-    name = message.new_chat_participant.first_name
-    if hasattr(message.new_chat_participant, 'last_name') and message.new_chat_participant.last_name is not None:
-        name += u" {}".format(message.new_chat_participant.last_name)
+    for user in message.new_chat_members:
+        name = user.first_name
+        if hasattr(user, 'last_name') and user.last_name is not None:
+            name += u" {}".format(user.last_name)
 
-    if hasattr(message.new_chat_participant, 'username') and message.new_chat_participant.username is not None:
-        name += u" (@{})".format(message.new_chat_participant.username)
+        if hasattr(user, 'username') and user.username is not None:
+            name += u" (@{})".format(user.username)
 
-    bot.reply_to(message, 'добро пожаловать'+ name)
-    
+        bot.reply_to(message, 'добро пожаловать '+ name)
+        
     
 @bot.message_handler(func=lambda message: True)
 def filter(message):
@@ -48,7 +56,6 @@ def filter(message):
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
     bot.reply_to(message, message.text)
-
 
 
 bot.polling()
